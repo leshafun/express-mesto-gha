@@ -50,7 +50,7 @@ module.exports.createUser = (req, res) => {
 
 //обновляет профиль
 module.exports.updateUser = (req, res) => {
-  User.findByIdAndUpdate(req.params.id, req.body, {
+  User.findByIdAndUpdate(req.params.userId, req.body, {
     new: true,
     runValidators: true,
   })
@@ -72,7 +72,7 @@ module.exports.updateUser = (req, res) => {
 
 //обновляет аватар
 module.exports.updateUserAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.params.id, req.body, {
+  User.findByIdAndUpdate(req.params.userId, req.body, {
     new: true,
     runValidators: true,
   })

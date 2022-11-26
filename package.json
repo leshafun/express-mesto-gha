@@ -1,0 +1,33 @@
+{
+  "name": "express-mesto-gha",
+  "version": "1.0.0",
+  "description": "[![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml) [![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml)\r # Проект Mesto фронтенд + бэкенд",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint .",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leshafun/express-mesto-gha.git"
+  },
+  "keywords": [],
+  "author": "LN",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leshafun/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/leshafun/express-mesto-gha#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.7.3"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.43.0",
+    "@typescript-eslint/parser": "^5.43.0",
+    "eslint": "^8.27.0",
+    "eslint-plugin-react": "^7.31.10"
+  }
+}

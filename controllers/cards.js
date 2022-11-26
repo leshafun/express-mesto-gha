@@ -32,7 +32,7 @@ module.exports.createCard = (req, res) => {
   Card.create({name, link, owner})
     .then((card) => res.status(SUCCESS_OK).send(card))
     .catch((err) => {
-      if( err.name === 'ValidationError' || err.name === 'CastError') {
+      if( err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
       } else {
         res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
@@ -66,7 +66,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => res.status(SUCCESS_OK).send(card))
     .catch((err) => {
-      if( err.name === 'ValidationError' || err.name === 'CastError') {
+      if( err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
       } else {
         res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})

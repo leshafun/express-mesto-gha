@@ -23,9 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/users', routerUsers);
 app.use('/cards', routerCards);
-app.get('/', function (req, res){
-  res.send('hello world')
-})
+
 
 app.listen(PORT, () => {
   console.log('SERVER START')

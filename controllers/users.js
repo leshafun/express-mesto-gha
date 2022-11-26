@@ -6,7 +6,6 @@ const SERVER_ERROR = 500;
 const SUCCESS_OK = 200;
 const CREATED = 201;
 
-
 // возвращает всех пользователей
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -74,6 +73,7 @@ module.exports.updateUserAvatar = (req, res) => {
   })
     .then((user) => {
         res.status(SUCCESS_OK).send(user)
+
     })
     .catch((err) => {
       if( err.name === 'ValidationError' || err.name === 'CastError') {

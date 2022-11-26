@@ -1,11 +1,8 @@
 const Card = require('../models/card');
 
 const BAD_REQUEST = 400;
-const NOT_FOUND = 404;
 const SERVER_ERROR = 500;
 const SUCCESS_OK = 200;
-const CREATED = 201;
-
 
 //возвращает все карточки
 module.exports.getCards = (req, res) => {
@@ -30,7 +27,7 @@ module.exports.deleteCard = (req, res) => {
 //создаёт карточку
 module.exports.createCard = (req, res) => {
   const {name, link} = req.body;
-  const owner = req.user._id;
+  const owner = req.user.userId;
 
   Card.create({name, link, owner})
     .then((card) => res.status(SUCCESS_OK).send(card))
@@ -47,7 +44,7 @@ module.exports.createCard = (req, res) => {
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    {$addToSet: {likes: req.user._id}},
+    {$addToSet: {likes: req.user.userId}},
     {new: true},
   )
     .then((card) => res.status(SUCCESS_OK).send(card))
@@ -60,12 +57,11 @@ module.exports.likeCard = (req, res) => {
     })
 };
 
-
 //убрать лайк с карточки
 module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    {$pull: {likes: req.user._id}},
+    {$pull: {likes: req.user.userId}},
     {new: true},
   )
     .then((card) => res.status(SUCCESS_OK).send(card))

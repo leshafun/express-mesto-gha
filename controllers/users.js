@@ -55,11 +55,7 @@ module.exports.updateUser = (req, res) => {
     runValidators: true,
   })
     .then((user) => {
-      if (user === null) {
-        res.status(NOT_FOUND)
-      } else {
         res.status(SUCCESS_OK).send(user)
-      }
     })
     .catch((err) => {
       if( err.name === 'ValidationError' || err.name === 'CastError') {

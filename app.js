@@ -12,11 +12,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-// Закоментить перед стартом
  app.use((req, res, next) => {
   req.user = {
-    _id: '638233903e0a7aebf024dbbb' // вставьте сюда _id созданного в предыдущем пункте пользователя
+    _id: '638233903e0a7aebf024dbbb'
   };
 
   next();

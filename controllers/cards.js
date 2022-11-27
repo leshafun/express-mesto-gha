@@ -77,7 +77,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (card === null) {
-        res.status(SUCCESS_OK).send({message: 'Переданы некорректные данные для постановки/удаления лака'})
+        res.status(NOT_FOUND).send({message: 'Переданы некорректные данные для постановки/удаления лака'})
       } else {
         card.remove()
           .then(() => {
@@ -88,7 +88,7 @@ module.exports.dislikeCard = (req, res) => {
       if(err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
       } else if (err.message === "NotFound") {
-        res.status(SUCCESS_OK).send({ message: 'Переданы некорректные данные для постановки/удаления лака'})
+        res.status(NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/удаления лака'})
       } else {
         res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
       }

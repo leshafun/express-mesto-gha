@@ -32,10 +32,9 @@ module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (card === null) {
-        res.status(NOT_FOUND).send({message: 'Переданы некорректные данные для постановки/удаления лака'})
+        res.status(NOT_FOUND).send({message: 'Карточка не найдена'})
       } else {
-        card.remove()
-          .then(() => res.status(SUCCESS_OK).send(card))
+          res.status(SUCCESS_OK).send(card)
     }})
     .catch((err) => {
       if( err.name === 'CastError') {

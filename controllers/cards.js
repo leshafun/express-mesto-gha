@@ -30,10 +30,12 @@ module.exports.createCard = (req, res) => {
 //удаляет карточку по идентификатору
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
+    .populate(["owner"])
     .then((card) => {
+
       if (card === null) {
         res.status(NOT_FOUND).send({message: 'Картинка не найдена'})
-      } else {
+      } else (card !== req.user.userId); {
           res.status(SUCCESS_OK).send(card)
     }})
     .catch((err) => {

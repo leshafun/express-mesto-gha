@@ -49,7 +49,7 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (card === null) {
-        res.status(NOT_FOUND).send({message: 'Переданы некорректные данные для постановки лака'})
+        res.status(NOT_FOUND).send({message: 'Переданы некорректные данные для постановки/удаления лака'})
       } else {
       res.status(SUCCESS_OK).send(card)
     }})
@@ -74,7 +74,7 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       if( err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(NOT_FOUND).send({ message: 'Неправильные, некорректные данные'})
+        res.status(NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/удаления лака'})
       } else {
         res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
       }

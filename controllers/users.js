@@ -54,7 +54,6 @@ module.exports.updateUser = (req, res) => {
     runValidators: true,
   })
     .then((user) => {
-      console.log(user);
         res.status(SUCCESS_OK).send(user)
     })
     .catch((err) => {

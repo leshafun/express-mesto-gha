@@ -77,7 +77,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (card === null) {
-        res.status(NOT_FOUND).send({message: 'Переданы некорректные данные для постановки/удаления лака'})
+        res.status(SUCCESS_OK).send({message: 'Переданы некорректные данные для постановки/удаления лака'})
       } else {
         card.remove()
           .then(() => {

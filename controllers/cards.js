@@ -4,6 +4,7 @@ const BAD_REQUEST = 400;
 const SERVER_ERROR = 500;
 const SUCCESS_OK = 200;
 const NOT_FOUND = 404;
+const FORBIDDEN = 403;
 
 //возвращает все карточки
 module.exports.getCards = (req, res) => {
@@ -35,8 +36,10 @@ module.exports.deleteCard = (req, res) => {
       if (card === null) {
         res.status(NOT_FOUND).send({message: 'Картинка не найдена'})
       } else if (card !== req.user.userId) {
-        res.status(SUCCESS_OK).send(card)
-    }})
+        res.status(FORBIDDEN).send({message: 'Запрещено'})
+    }
+      return res.status(SUCCESS_OK).send(card)
+    })
     .catch((err) => {
       if( err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})

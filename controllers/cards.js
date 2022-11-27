@@ -73,8 +73,8 @@ module.exports.dislikeCard = (req, res) => {
       res.status(SUCCESS_OK).send(card)
     })
     .catch((err) => {
-      if( err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
+      if( err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(NOT_FOUND).send({ message: 'Неправильные, некорректные данные'})
       } else {
         res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
       }

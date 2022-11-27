@@ -35,9 +35,7 @@ module.exports.deleteCard = (req, res) => {
         res.status(NOT_FOUND).send({message: 'Переданы некорректные данные для постановки/удаления лака'})
       } else {
         card.remove()
-          .then(() => {
-            res.send(card)
-          })
+          .then(() => res.status(SUCCESS_OK).send(card))
     }})
     .catch((err) => {
       if( err.name === 'CastError') {

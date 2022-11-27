@@ -16,7 +16,7 @@ module.exports.createCard = (req, res) => {
   const owner = req.user.userId;
 
   Card.create({name, link, owner})
-    .then((card) => res.send(card))
+    .then((card) => res.status(SUCCESS_OK).send(card))
     .catch((err) => {
       if( err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})

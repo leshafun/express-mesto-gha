@@ -16,7 +16,7 @@ module.exports.createCard = (req, res) => {
   const owner = req.user.userId;
 
   Card.create({name, link, owner})
-    .then((card) => res.status(SUCCESS_OK).send(card))
+    .then((card) => res.status(SUCCESS_OK).send({data: card}))
     .catch((err) => {
       if( err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
@@ -29,7 +29,7 @@ module.exports.createCard = (req, res) => {
 //удаляет карточку по идентификатору
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.status(SUCCESS_OK).send({data: card}))
+    .then((card) => res.status(SUCCESS_OK).send(card))
     .catch((err) => {
       if( err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})

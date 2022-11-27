@@ -49,7 +49,7 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (card === null) {
-        res.status(NOT_FOUND).send({message: 'Запрашиваемый пользователь не найден'})
+        res.status(NOT_FOUND).send({message: 'Переданы некорректные данные для постановки. снятия лака'})
       } else {
       res.status(SUCCESS_OK).send(card)
     }})
@@ -69,7 +69,13 @@ module.exports.dislikeCard = (req, res) => {
     {$pull: {likes: req.user.userId}},
     {new: true},
   )
-    .then((card) => res.status(SUCCESS_OK).send(card))
+    .then((card) => {
+      if (card === null) {
+        res.status(BAD_REQUEST ).send({message: 'Переданы некорректные данные для постановки. снятия лака'})
+      } else {
+        res.status(SUCCESS_OK).send(card)
+      }
+    })
     .catch((err) => {
       if( err.name === 'ValidationError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})

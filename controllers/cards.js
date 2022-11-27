@@ -73,7 +73,7 @@ module.exports.dislikeCard = (req, res) => {
       res.status(SUCCESS_OK).send(card)
     })
     .catch((err) => {
-      if( err.name === 'ValidationError' || err.name === 'CastError') {
+      if(err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
       } else if (err.message === "NotFound") {
         res.status(NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/удаления лака'})

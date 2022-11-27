@@ -30,7 +30,15 @@ module.exports.createCard = (req, res) => {
 //удаляет карточку по идентификатору
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.status(SUCCESS_OK).send(card))
+    .then((card) => {
+      if (card === null) {
+        res.status(NOT_FOUND).send({message: 'Переданы некорректные данные для постановки/удаления лака'})
+      } else {
+        card.remove()
+          .then(() => {
+            res.send(card)
+          })
+    }})
     .catch((err) => {
       if( err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})

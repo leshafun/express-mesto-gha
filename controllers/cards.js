@@ -3,6 +3,7 @@ const Card = require('../models/card');
 const BAD_REQUEST = 400;
 const SERVER_ERROR = 500;
 const SUCCESS_OK = 200;
+const NOT_FOUND = 404;
 
 //возвращает все карточки
 module.exports.getCards = (req, res) => {
@@ -46,7 +47,12 @@ module.exports.likeCard = (req, res) => {
     {$addToSet: {likes: req.user.userId}},
     {new: true},
   )
-    .then((card) => res.status(SUCCESS_OK).send(card))
+    .then((card) => {
+      if (card === null) {
+        res.status(NOT_FOUND).send({message: 'Запрашиваемый пользователь не найден'})
+      } else {
+      res.status(SUCCESS_OK).send(card)
+    }})
     .catch((err) => {
       if( err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})

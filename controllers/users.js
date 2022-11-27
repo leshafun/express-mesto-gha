@@ -68,7 +68,7 @@ module.exports.updateUser = (req, res) => {
 
 //обновляет аватар
 module.exports.updateUserAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.params.userId, req.body, {
+  User.findByIdAndUpdate(req.user.userId, req.body, {
     new: true,
     runValidators: true,
   })

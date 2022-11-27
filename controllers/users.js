@@ -49,11 +49,12 @@ module.exports.createUser = (req, res) => {
 
 //обновляет профиль
 module.exports.updateUser = (req, res) => {
-  User.findByIdAndUpdate(req.params.userId, req.body, {
+  User.findByIdAndUpdate(req.user.userId, req.body, {
     new: true,
     runValidators: true,
   })
     .then((user) => {
+      console.log(user);
         res.status(SUCCESS_OK).send(user)
     })
     .catch((err) => {

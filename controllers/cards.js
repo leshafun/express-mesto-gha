@@ -10,20 +10,6 @@ module.exports.getCards = (req, res) => {
     .then((card) => res.status(SUCCESS_OK).send(card))
     .catch(() => res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' }));
 };
-
-//удаляет карточку по идентификатору
-module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.status(SUCCESS_OK).send(card))
-    .catch((err) => {
-      if( err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
-      } else {
-        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
-      }
-    })
-};
-
 //создаёт карточку
 module.exports.createCard = (req, res) => {
   const {name, link} = req.body;
@@ -33,6 +19,19 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.status(SUCCESS_OK).send(card))
     .catch((err) => {
       if( err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
+      } else {
+        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
+      }
+    })
+};
+
+//удаляет карточку по идентификатору
+module.exports.deleteCard = (req, res) => {
+  Card.findByIdAndRemove(req.params.cardId)
+    .then((card) => res.status(SUCCESS_OK).send({data: card}))
+    .catch((err) => {
+      if( err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
       } else {
         res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})

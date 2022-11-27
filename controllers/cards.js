@@ -36,7 +36,7 @@ module.exports.deleteCard = (req, res) => {
       } else {
         card.remove()
           .then(() => {
-            res.send(card)
+            res.status(SUCCESS_OK).send(card)
           })
     }})
     .catch((err) => {

@@ -69,12 +69,11 @@ module.exports.dislikeCard = (req, res) => {
     {$pull: {likes: req.user.userId}},
     {new: true},
   )
-    .orFail(() => new Error('NotFound'))
     .then((card) => {
       res.status(SUCCESS_OK).send(card)
     })
     .catch((err) => {
-      if( err.name === 'ValidationError') {
+      if( err.name === 'CastError') {
         res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
       } else {
         res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})

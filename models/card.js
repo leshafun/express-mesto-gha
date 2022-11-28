@@ -1,5 +1,5 @@
 const { Schema, mongoose } = require('mongoose');
-const User = require('../models/user.js');
+
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -20,7 +20,7 @@ const cardSchema = new mongoose.Schema({
   },
   likes: {
     type: [Schema.Types.ObjectId],
-    ref: User,
+    ref: 'user',
     default: [],
   },
   createdAt: {

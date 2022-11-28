@@ -13,76 +13,72 @@ module.exports.getUsers = (req, res) => {
     .catch(() => res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' }));
 };
 
-//возвращает пользователя по _id
+// возвращает пользователя по _id
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user === null) {
-        res.status(NOT_FOUND).send({message: 'Запрашиваемый пользователь не найден'})
+        res.status(NOT_FOUND).send({ message: 'Запрашиваемый пользователь не найден' });
       } else {
-        res.status(SUCCESS_OK).send(user)
+        res.status(SUCCESS_OK).send(user);
       }
-  })
+    })
     .catch((err) => {
-      if( err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
-        } else {
-        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
+      if (err.name === 'CastError') {
+        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные' });
+      } else {
+        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
       }
-  })
+    });
 };
 
 // создаёт пользователя
 module.exports.createUser = (req, res) => {
-  const {name, about, avatar} = req.body;
+  const { name, about, avatar } = req.body;
 
-  User.create({name, about, avatar})
+  User.create({ name, about, avatar })
     .then((user) => res.status(CREATED).send(user))
     .catch((err) => {
-      if( err.name === 'ValidationError' ) {
-        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
+      if (err.name === 'ValidationError') {
+        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные' });
       } else {
-        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
+        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
       }
-    })
+    });
 };
 
-//обновляет профиль
+// обновляет профиль
 module.exports.updateUser = (req, res) => {
   User.findByIdAndUpdate(req.user.userId, req.body, {
     new: true,
     runValidators: true,
   })
     .then((user) => {
-        res.status(SUCCESS_OK).send(user)
+      res.status(SUCCESS_OK).send(user);
     })
     .catch((err) => {
-      if( err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные' });
       } else {
-        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
+        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
       }
-    })
+    });
 };
 
-//обновляет аватар
+// обновляет аватар
 module.exports.updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user.userId, req.body, {
     new: true,
     runValidators: true,
   })
     .then((user) => {
-        res.status(SUCCESS_OK).send(user)
-
+      res.status(SUCCESS_OK).send(user);
     })
     .catch((err) => {
-      if( err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные'})
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(BAD_REQUEST).send({ message: 'Неправильные, некорректные данные' });
       } else {
-        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера'})
+        res.status(SERVER_ERROR).send({ message: 'Внутренняя ошибка сервера' });
       }
-    })
+    });
 };
-
-
-

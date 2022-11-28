@@ -31,6 +31,7 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
+      // Позже переделать на orFail()
       if (card === null) {
         res.status(NOT_FOUND).send({ message: 'Картинка не найдена' });
       } else {
@@ -54,6 +55,7 @@ module.exports.likeCard = (req, res) => {
     { new: true },
   )
     .then((card) => {
+      // Позже переделать на orFail()
       if (card === null) {
         res.status(NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/удаления лака' });
       } else {
@@ -77,6 +79,7 @@ module.exports.dislikeCard = (req, res) => {
     { new: true },
   )
     .then((card) => {
+      // Позже переделать на orFail()
       if (card === null) {
         res.status(NOT_FOUND).send({ message: 'Переданы некорректные данные для постановки/удаления лака' });
       } else {

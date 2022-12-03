@@ -26,5 +26,5 @@ app.use('/', auth, (req, res, next) => {
 
 app.listen(PORT);
 
-app.use(errorHandler);
 app.use(errors());
+app.use(errorHandler);

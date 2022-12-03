@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const NotFound = require('./errors/NotFound');
@@ -26,3 +27,4 @@ app.use('/', auth, (req, res, next) => {
 app.listen(PORT);
 
 app.use(errorHandler);
+app.use(errors());

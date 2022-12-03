@@ -6,7 +6,6 @@ const NotFound = require('../errors/NotFound');
 const SuccessOk = require('../errors/SuccessOk');
 const Created = require('../errors/Created');
 const EmailError = require('../errors/EmailError');
-const AuthError = require('../errors/AuthError');
 
 // возвращает всех пользователей
 module.exports.getUsers = (req, res, next) => {
@@ -59,27 +58,31 @@ module.exports.createUser = (req, res, next) => {
     email,
     password,
   } = req.body;
-  bcrypt.hash(password, 10)
-    .then((hash) => {
-      User.create({
-        name,
-        about,
-        avatar,
-        email,
-        password: hash,
-      });
-    })
+
+  User.findOne({ email }).select('+password')
     .then((user) => {
-      res.status(Created).send(user)
-        .catch((err) => {
-          if (err.name === 'ValidationError') {
-            next(new BadRequest('Неправильные, некорректные данные'));
-          } else if (err.code === 11000) {
-            next(new EmailError('Email не уникальный'));
-          } else {
-            next(err);
-          }
-        });
+      if (user) {
+        throw new EmailError('email не уникальный');
+      }
+      return bcrypt.hash(password, 10)
+        .then((hash) => User.create({
+          name,
+          about,
+          avatar,
+          email,
+          password: hash,
+        }));
+    })
+
+    .then((user) => res.status(Created).send(user))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequest('Неправильные, некорректные данные'));
+      } else if (err.code === 11000) {
+        next(new EmailError('Email не уникальный'));
+      } else {
+        next(err);
+      }
     });
 };
 
@@ -122,16 +125,16 @@ module.exports.updateUserAvatar = (req, res, next) => {
 // Авторизоваться
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email })
-    .select('+password')
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) { throw new AuthError('Неверный логин или пароль'); }
-      return bcrypt.compare(password, user.password)
-        .then((matched) => {
-          if (!matched) { throw new AuthError('Неверный логин или пароль'); }
-          const token = jwt.sign({ _id: user.userId }, 'some-secret-key', { expiresIn: '7d' });
-          return res.status(Created).send({ token });
-        });
+      const token = jwt.sing({ userId: user.userId }, 'some-secret-key', { expiresIn: '7d' });
+      return res.send(token);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        next(new BadRequest('Неправильные, некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
 };

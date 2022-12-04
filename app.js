@@ -22,7 +22,7 @@ app.post('/signin', celebrate({
     email: Joi.string().required().email({ tlds: { allow: false } }),
     password: Joi.string().required(),
   }),
-}), login);
+}), authorization, login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -32,7 +32,7 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
   }),
 }), createUser);
-app.use('/users', authorization, routerUsers);
+app.use('/users', routerUsers);
 app.use('/cards', routerCards);
 app.use('*', (req, res, next) => {
   next(new NotFound('Страница не найдена'));

@@ -5,11 +5,11 @@ const {
   getUser,
   updateUser,
   updateAvatar,
-  getCurrentUser,
+  getUserInfo,
 } = require('../controllers/users');
 
 userRouter.get('/', getUsers);
-userRouter.get('/me', getCurrentUser);
+userRouter.get('/me', getUserInfo);
 
 userRouter.get('/:userId', celebrate({
   params: Joi.object().keys({

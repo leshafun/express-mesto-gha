@@ -1,21 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const app = express();
-const bodyParser = require('body-parser');
-const { celebrate, Joi } = require('celebrate');
-const { errors } = require('celebrate');
+const { errors, celebrate, Joi } = require('celebrate');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
-const NotFoundError = require('./errors/NotFoundError');
+const NotFound = require('./errors/NotFound');
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+
+const app = express();
 
 app.listen(3000);
-app.use(bodyParser.json());
+app.use(express.json());
 
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardRouter);
@@ -38,7 +37,7 @@ app.post('/signup', celebrate({
 }), createUser);
 
 app.use((req, res, next) => {
-  const error = new NotFoundError('Страница не найдена');
+  const error = new NotFound('Страница не найдена');
   next(error);
 });
 

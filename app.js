@@ -27,17 +27,16 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 app.use('/cards', routerCards);
-app.use('*', (req, res, next) => {
-  next(new NotFound('Страница не найдена'));
-});
-app.use(authorization);
-app.use('/users', routerUsers);
+app.use('/users', authorization, routerUsers);
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email({ tlds: { allow: false } }),
     password: Joi.string().required(),
   }),
-}), login);
+}), authorization, login);
+app.use('*', (req, res, next) => {
+  next(new NotFound('Страница не найдена'));
+});
 
 app.listen(PORT);
 

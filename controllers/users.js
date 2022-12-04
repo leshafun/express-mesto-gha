@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
+const EmailError = require('../errors/EmailError');
 
 // возвращает всех пользователей
 module.exports.getUsers = (req, res, next) => {
@@ -47,7 +48,6 @@ module.exports.getUserInfo = (req, res, next) => {
 };
 
 // создаёт пользователя
-
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then((hash) => User.create({
@@ -65,6 +65,8 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Некорректные данные при создании карточки'));
+      } else if (err.code === 11000) {
+        next(new EmailError('Email уже используется'));
       } else {
         next(err);
       }

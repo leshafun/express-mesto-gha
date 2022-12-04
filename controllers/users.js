@@ -1,11 +1,10 @@
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
 const SuccessOk = require('../errors/SuccessOk');
 const Created = require('../errors/Created');
-const EmailError = require('../errors/EmailError');
 
 // возвращает всех пользователей
 module.exports.getUsers = (req, res, next) => {
@@ -50,36 +49,24 @@ module.exports.getUserInfo = (req, res, next) => {
 };
 
 // создаёт пользователя
+
 module.exports.createUser = (req, res, next) => {
-  const {
-    name,
-    about,
-    avatar,
-    email,
-    password,
-  } = req.body;
-
-  User.findOne({ email }).select('+password')
-    .then((user) => {
-      if (user) {
-        throw new EmailError('email не уникальный');
-      }
-      return bcrypt.hash(password, 10)
-        .then((hash) => User.create({
-          name,
-          about,
-          avatar,
-          email,
-          password: hash,
-        }));
+  bcrypt.hash(req.body.password, 10)
+    .then((hash) => User.create({
+      email: req.body.email,
+      password: hash,
+      name: req.body.name,
+      about: req.body.about,
+      avatar: req.body.avatar,
+    }))
+    .then(() => {
+      res.status(Created).send({
+        name: req.body.name, about: req.body.about, avatar: req.body.avatar, email: req.body.email,
+      });
     })
-
-    .then((user) => res.status(Created).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequest('Неправильные, некорректные данные'));
-      } else if (err.code === 11000) {
-        next(new EmailError('Email не уникальный'));
+        next(new BadRequest('Некорректные данные при создании карточки'));
       } else {
         next(err);
       }
@@ -127,14 +114,10 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sing({ userId: user.userId }, 'some-secret-key', { expiresIn: '7d' });
-      return res.send(token);
+      const token = jwt.sign({ userId: user.userId }, 'some-secret-key', { expiresIn: '7d' });
+      return res.send({ token });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequest('Неправильные, некорректные данные'));
-      } else {
-        next(err);
-      }
+      next(err);
     });
 };

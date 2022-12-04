@@ -17,6 +17,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email({ tlds: { allow: false } }),
+    password: Joi.string().required(),
+  }),
+}), login);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -25,20 +32,14 @@ app.post('/signup', celebrate({
     email: Joi.string().min(3).required().email(),
     password: Joi.string().required(),
   }),
-}), authorization, createUser);
+}), createUser);
+app.use(authorization);
+app.use('/users', routerUsers);
 app.use('/cards', routerCards);
-app.use('/users', authorization, routerUsers);
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email({ tlds: { allow: false } }),
-    password: Joi.string().required(),
-  }),
-}), authorization, login);
 app.use('*', (req, res, next) => {
   next(new NotFound('Страница не найдена'));
 });
-
-app.listen(PORT);
-
 app.use(errors());
 app.use(errorHandler);
+
+app.listen(PORT);

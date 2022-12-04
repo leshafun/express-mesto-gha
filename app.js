@@ -34,8 +34,6 @@ app.post('/signin', celebrate({
 }), login);
 app.use('/users', auth, routerUsers);
 app.use('/cards', auth, routerCards);
-app.post('/signin', routerUsers);
-app.post('/signup', routerUsers);
 app.use('/', auth, (req, res, next) => {
   next(new NotFound('Введенный адрес не найден'));
 });

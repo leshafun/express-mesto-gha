@@ -1,13 +1,12 @@
 const Card = require('../models/card');
 const BadRequest = require('../errors/BadRequest');
-const SuccessOk = require('../errors/SuccessOk');
 const NotFound = require('../errors/NotFound');
 const Forbidden = require('../errors/Forbidden');
 
 // возвращает все карточки
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((card) => res.status(SuccessOk).send(card))
+    .then((card) => res.status(200).send(card))
     .catch(next);
 };
 
@@ -17,7 +16,7 @@ module.exports.createCard = (req, res, next) => {
   const owner = req.user.userId;
 
   Card.create({ name, link, owner })
-    .then((card) => res.status(SuccessOk).send(card))
+    .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequest('Неправильные, некорректные данные'));
@@ -37,7 +36,7 @@ module.exports.deleteCard = (req, res, next) => {
       } else {
         Card.findByIdAndRemove(req.params.cardId)
           .then(() => {
-            res.status(SuccessOk).send(card);
+            res.status(200).send(card);
           });
       }
     })
@@ -59,7 +58,7 @@ module.exports.likeCard = (req, res, next) => {
   )
     .orFail(() => next(new NotFound('Картинка не найдена')))
     .then((card) => {
-      res.status(SuccessOk).send(card);
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -79,7 +78,7 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .orFail(() => next(new NotFound('Картинка не найдена')))
     .then((card) => {
-      res.status(SuccessOk).send(card);
+      res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {

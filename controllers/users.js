@@ -3,13 +3,11 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
-const SuccessOk = require('../errors/SuccessOk');
-const Created = require('../errors/Created');
 
 // возвращает всех пользователей
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((user) => res.status(SuccessOk).send(user))
+    .then((user) => res.status(200).send(user))
     .catch(next);
 };
 
@@ -20,7 +18,7 @@ module.exports.getUser = (req, res, next) => {
       throw new NotFound('Запрашиваемый пользователь не найден');
     })
     .then((user) => {
-      res.status(SuccessOk).send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -38,7 +36,7 @@ module.exports.getUserInfo = (req, res, next) => {
     .orFail(() => {
       throw new NotFound('Пользователь не найден');
     })
-    .then((user) => res.status(SuccessOk).send(user))
+    .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequest('Неправильные, некорректные данные'));
@@ -60,7 +58,7 @@ module.exports.createUser = (req, res, next) => {
       avatar: req.body.avatar,
     }))
     .then(() => {
-      res.status(Created).send({
+      res.status(201).send({
         name: req.body.name, about: req.body.about, avatar: req.body.avatar, email: req.body.email,
       });
     })
@@ -80,7 +78,7 @@ module.exports.updateUser = (req, res, next) => {
     runValidators: true,
   })
     .then((user) => {
-      res.status(SuccessOk).send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -98,7 +96,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     runValidators: true,
   })
     .then((user) => {
-      res.status(SuccessOk).send(user);
+      res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -114,7 +112,7 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user.userId }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ userId: user.userId }, 'some-secret-key', { expiresIn: '7d' });
       return res.send({ token });
     })
     .catch((err) => {

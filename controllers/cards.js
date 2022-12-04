@@ -6,6 +6,7 @@ const NotFound = require('../errors/NotFound');
 // возвращает все карточки
 const getCards = (req, res, next) => {
   Card.find({})
+    .populate(['owner', 'likes'])
     .then((data) => {
       res.status(200).send(data);
     })
@@ -59,6 +60,7 @@ const deleteCard = (req, res, next) => {
 // поставить лайк карточке
 const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
+    .populate(['owner', 'likes'])
     .orFail(() => {
       throw new NotFound('Карточка не найдена');
     })

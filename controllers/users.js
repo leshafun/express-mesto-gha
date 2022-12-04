@@ -24,7 +24,7 @@ const getUser = (req, res, next) => {
       res.send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequest('Неправильные, некорректные данные'));
       } else {
         next(err);
@@ -124,10 +124,6 @@ const login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'very-secret-key', { expiresIn: '7d' });
-      res.cookie('jwt', token, {
-        maxAge: 604800,
-        httpOnly: true,
-      });
       res.send({ token });
     })
     .catch(next);

@@ -25,7 +25,7 @@ app.post('/signup', celebrate({
     email: Joi.string().min(3).required().email(),
     password: Joi.string().required(),
   }),
-}), createUser);
+}), authorization, createUser);
 app.use('/cards', routerCards);
 app.use('/users', authorization, routerUsers);
 app.post('/signin', celebrate({

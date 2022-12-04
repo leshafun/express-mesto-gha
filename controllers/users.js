@@ -4,14 +4,12 @@ const User = require('../models/user');
 const EmailError = require('../errors/EmailError');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
-const SUCCESS_OK = require('../utils/constants');
-const CREATED = require('../utils/constants');
 
 // возвращает всех пользователей
 const getUsers = (req, res, next) => {
   User.find({})
     .then((data) => {
-      res.status(SUCCESS_OK).send(data);
+      res.status(200).send(data);
     })
     .catch(next);
 };
@@ -53,7 +51,7 @@ const createUser = (req, res, next) => {
         password: hash,
       })
         .then((user) => {
-          res.status(CREATED).send({
+          res.status(201).send({
             name: user.name,
             about: user.about,
             avatar: user.avatar,
@@ -86,7 +84,7 @@ const updateUser = (req, res, next) => {
       throw new NotFound('Пользователь не найден');
     })
     .then((data) => {
-      res.status(SUCCESS_OK).send(data);
+      res.status(200).send(data);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -109,7 +107,7 @@ const updateAvatar = (req, res, next) => {
       throw new NotFound('Пользователь не найден');
     })
     .then((data) => {
-      res.status(SUCCESS_OK).send(data);
+      res.status(200).send(data);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -143,7 +141,7 @@ const getUserInfo = (req, res, next) => {
       if (!user) {
         return next(new Error('Пользователь не найден'));
       }
-      return res.status(SUCCESS_OK).send({ data: user });
+      return res.status(200).send({ data: user });
     })
     .catch(next);
 };

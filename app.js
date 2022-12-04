@@ -17,6 +17,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/users', authorization, routerUsers);
+app.use('/cards', authorization, routerCards);
+
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email({ tlds: { allow: false } }),
@@ -33,12 +36,11 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
   }),
 }), createUser);
-app.use(authorization);
-app.use('/users', routerUsers);
-app.use('/cards', routerCards);
+
 app.use('*', (req, res, next) => {
   next(new NotFound('Страница не найдена'));
 });
+
 app.use(errors());
 app.use(errorHandler);
 

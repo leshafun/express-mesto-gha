@@ -5,7 +5,7 @@ const routerUsers = require('./routes/users');
 const routerCards = require('./routes/cards');
 const NotFound = require('./errors/NotFound');
 const errorHandler = require('./middlewares/errorHandler');
-const auth = require('./middlewares/auth');
+// const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
@@ -32,10 +32,10 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
   }),
 }), createUser);
-app.use('/users', auth, routerUsers);
-app.use('/cards', auth, routerCards);
-app.use('/', auth, (req, res, next) => {
-  next(new NotFound('Введенный адрес не найден'));
+app.use('/users', routerUsers);
+app.use('/cards', routerCards);
+app.use('*', (req, res, next) => {
+  next(new NotFound('Страница не найдена'));
 });
 
 app.listen(PORT);

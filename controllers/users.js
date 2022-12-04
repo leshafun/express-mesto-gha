@@ -31,7 +31,6 @@ module.exports.getUser = (req, res, next) => {
 };
 
 // Получение информации о пользователе
-
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user.userId)
     .orFail(() => {

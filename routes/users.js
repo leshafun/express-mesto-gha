@@ -3,7 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 
 const {
   getUsers,
-  createUser,
+  getUser,
   updateUser,
   updateUserAvatar,
   getUserInfo,
@@ -13,15 +13,15 @@ router.get('/', getUsers);
 
 router.get('/me', getUserInfo);
 
-router.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(/https?:\/\/(www\.)?\d?\D{1,}#?/),
-    email: Joi.string().min(3).required().email(),
-    password: Joi.string().required(),
+router.get(
+  '/:userId',
+  celebrate({
+    params: Joi.object().keys({
+      userId: Joi.string().length(24).hex(),
+    }),
   }),
-}), createUser);
+  getUser,
+);
 
 router.patch('/me', celebrate({
   body: Joi.object().keys({

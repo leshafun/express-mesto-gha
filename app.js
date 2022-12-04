@@ -32,9 +32,8 @@ app.post('/signup', celebrate({
     password: Joi.string().required(),
   }),
 }), createUser);
-app.use(authorization);
 app.use('/users', routerUsers);
-app.use('/cards', routerCards);
+app.use('/cards', authorization, routerCards);
 app.use('*', (req, res, next) => {
   next(new NotFound('Страница не найдена'));
 });

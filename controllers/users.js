@@ -142,7 +142,7 @@ const getUserInfo = (req, res, next) => {
       return res.status(SUCCESS_OK).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'CastError') {
         next(new BadRequest('Неправильные, некорректные данные'));
       } else {
         next(err);

@@ -2,13 +2,15 @@ const Card = require('../models/card');
 const Forbidden = require('../errors/Forbidden');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
+const SuccessOk = require('../errors/SuccessOk');
+const Created = require('../errors/SuccessOk');
 
 // возвращает все карточки
 const getCards = (req, res, next) => {
   Card.find({})
     .populate(['owner', 'likes'])
     .then((data) => {
-      res.status(200).send(data);
+      res.status(SuccessOk).send(data);
     })
     .catch(next);
 };
@@ -20,7 +22,7 @@ const createCard = (req, res, next) => {
 
   Card.create({ name, link, owner })
     .then((data) => {
-      res.status(201).send(data);
+      res.status(Created).send(data);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -45,7 +47,7 @@ const deleteCard = (req, res, next) => {
       }
       Card.findByIdAndRemove(req.params.cardId)
         .then((card) => {
-          res.status(200).send({ card });
+          res.status(SuccessOk).send({ card });
         });
     })
     .catch((err) => {
@@ -65,7 +67,7 @@ const likeCard = (req, res, next) => {
       throw new NotFound('Карточка не найдена');
     })
     .then((data) => {
-      res.status(201).send(data);
+      res.status(SuccessOk).send(data);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -84,7 +86,7 @@ const deleteLike = (req, res, next) => {
       throw new NotFound('Карточка не найдена');
     })
     .then((data) => {
-      res.status(200).send(data);
+      res.status(SuccessOk).send(data);
     })
     .catch((err) => {
       if (err.name === 'CastError') {

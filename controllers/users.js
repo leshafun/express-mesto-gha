@@ -4,12 +4,14 @@ const User = require('../models/user');
 const EmailError = require('../errors/EmailError');
 const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
+const SuccessOk = require('../errors/SuccessOk');
+const Created = require('../errors/SuccessOk');
 
 // возвращает всех пользователей
 const getUsers = (req, res, next) => {
   User.find({})
     .then((data) => {
-      res.status(200).send(data);
+      res.status(SuccessOk).send(data);
     })
     .catch(next);
 };
@@ -51,7 +53,7 @@ const createUser = (req, res, next) => {
         password: hash,
       })
         .then((user) => {
-          res.status(201).send({
+          res.status(Created).send({
             name: user.name,
             about: user.about,
             avatar: user.avatar,
@@ -84,7 +86,7 @@ const updateUser = (req, res, next) => {
       throw new NotFound('Пользователь не найден');
     })
     .then((data) => {
-      res.status(200).send(data);
+      res.status(SuccessOk).send(data);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -107,10 +109,10 @@ const updateAvatar = (req, res, next) => {
       throw new NotFound('Пользователь не найден');
     })
     .then((data) => {
-      res.status(200).send(data);
+      res.status(SuccessOk).send(data);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequest('Неправильные, некорректные данные'));
       } else {
         next(err);
@@ -137,9 +139,15 @@ const getUserInfo = (req, res, next) => {
       if (!user) {
         return next(new Error('Пользователь не найден'));
       }
-      return res.status(200).send({ data: user });
+      return res.status(SuccessOk).send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new BadRequest('Неправильные, некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 module.exports = {
